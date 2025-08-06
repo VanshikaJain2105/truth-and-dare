@@ -1,46 +1,151 @@
-# Getting Started with Create React App
+# Truth & Dare - Modern Web Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A beautiful, animated multiplayer Truth and Dare web application built with React, TypeScript, Framer Motion, and Tailwind CSS.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+🎯 **Realistic Bottle Spin Animation**
+- Smooth, physics-based spinning animation
+- Realistic bottle design with 3D effects
+- Cool spinning sound effects using Web Audio API
 
-### `npm start`
+👥 **Player Management**
+- Add/remove players dynamically
+- Circular player wheel layout
+- Visual selection indicators
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+🎨 **Modern UI/UX**
+- Glassmorphism design with backdrop blur effects
+- Dark/light gradient backgrounds
+- Smooth animations and transitions
+- Fully responsive design
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+🎮 **Interactive Gameplay**
+- No predefined questions - players create their own
+- Animated modal for Truth or Dare selection
+- Real-time task display
+- Minimum 2 players required
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React 18** with TypeScript
+- **Framer Motion** for animations
+- **Tailwind CSS** for styling
+- **Web Audio API** for sound effects
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Node.js (v14 or higher)
+- npm or yarn
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `npm run eject`
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd truth-and-dare
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. Install dependencies:
+```bash
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Start the development server:
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## How to Play
 
-## Learn More
+1. **Add Players**: Use the "Add Player" button to add participants to the game
+2. **Spin the Bottle**: Click the "Spin the Bottle!" button to start the game
+3. **Choose Challenge**: When a player is selected, choose between Truth or Dare
+4. **Create Task**: Type in a custom question or challenge for the selected player
+5. **Complete Challenge**: The selected player must complete the task!
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Game Rules
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Minimum 2 players required to start
+- Players can be added or removed at any time
+- Each spin randomly selects a player
+- No predefined questions - everything is custom!
+- Players can choose between Truth (questions) or Dare (actions)
+
+## Features in Detail
+
+### Bottle Animation
+- Realistic 3D bottle design with gradient colors
+- Smooth spinning animation with easing
+- Dynamic rotation calculation
+- Glow effects during spinning
+- Web Audio API sound effects
+
+### Player Wheel
+- Circular arrangement of players
+- Visual selection indicators
+- Hover effects and animations
+- Responsive design for mobile
+
+### Task Modal
+- Animated modal with backdrop blur
+- Truth/Dare selection buttons
+- Custom task input
+- Form validation
+- Smooth transitions
+
+### Responsive Design
+- Works on desktop, tablet, and mobile
+- Adaptive layouts and sizing
+- Touch-friendly interactions
+
+## Customization
+
+### Colors and Themes
+The app uses Tailwind CSS with custom gradients. You can modify the color scheme by editing:
+- `src/index.css` - Main styles and custom classes
+- Component files - Individual styling
+
+### Animations
+Framer Motion animations can be customized in:
+- `src/components/Bottle.tsx` - Bottle spinning
+- `src/components/PlayerWheel.tsx` - Player animations
+- `src/components/TaskModal.tsx` - Modal transitions
+
+### Sound Effects
+The spinning sound is generated using Web Audio API. You can modify the sound in:
+- `src/components/Bottle.tsx` - `playSpinningSound()` function
+
+## Browser Support
+
+- Chrome (recommended)
+- Firefox
+- Safari
+- Edge
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- Built with React and TypeScript
+- Animations powered by Framer Motion
+- Styling with Tailwind CSS
+- Sound effects using Web Audio API
+
+---
+
+**Have fun playing Truth & Dare!** 🎉

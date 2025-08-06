@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Loader from './components/Loader';
+import LandingPage from './components/LandingPage';
+import GamePage from './components/GamePage';
+import { Player } from './types';
 
-function App() {
+type AppState = 'loader' | 'landing' | 'game';
+
+const App: React.FC = () => {
+  const [appState, setAppState] = useState<AppState>('loader');
+  const [players, setPlayers] = useState<Player[]>([]);
+
+  const handleLoaderComplete = () => {
+    setAppState('landing');
+  };
+
+  const handleStartGame = (gamePlayers: { id: string; name: string }[]) => {
+    setPlayers(gamePlayers);
+    setAppState('game');
+  };
+
+  const handleBackToLanding = () => {
+    setAppState('landing');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <AnimatePresence mode="wait">
+      {appState === 'loader' && (
+        <Loader key="loader" onComplete={handleLoaderComplete} />
+      )}
+      
+      {appState === 'landing' && (
+        <motion.div
+          key="landing"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <LandingPage onStartGame={handleStartGame} />
+        </motion.div>
+      )}
+      
+      {appState === 'game' && (
+        <motion.div
+          key="game"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <GamePage players={players} onBackToLanding={handleBackToLanding} />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
-}
+};
 
 export default App;
