@@ -30,6 +30,7 @@ const GamePage: React.FC<GamePageProps> = ({ players, onBackToLanding }) => {
     setShowModal(false);
     setModalType(null);
     setTask('');
+    setTheme('default');
   };
 
   const handleSpinComplete = (selectedPlayer: Player) => {
@@ -44,22 +45,27 @@ const GamePage: React.FC<GamePageProps> = ({ players, onBackToLanding }) => {
     setModalType(null);
     setTask('');
     setTheme('default');
+    setCurrentPlayer(null);
   };
 
   const handleTaskChange = (task: string) => {
     setTask(task);
   };
 
-  const handleModalSubmit = () => {
-    if (currentPlayer && task && modalType) {
+  const handleModalSubmit = (type: 'truth' | 'dare', finalTask: string) => {
+    if (currentPlayer && finalTask && type) {
       const newChallenge: Challenge = {
         id: Date.now().toString(),
         playerName: currentPlayer.name,
-        type: modalType,
-        task: task,
+        type: type,
+        task: finalTask,
         timestamp: new Date(),
       };
-      setChallenges(prev => [newChallenge, ...prev]);
+      setChallenges(prev => [newChallenge, ...prev]); // Add to beginning of array
+      
+      // Set the current task for display
+      setTask(finalTask);
+      setModalType(type);
     }
     
     setShowModal(false);
@@ -69,10 +75,10 @@ const GamePage: React.FC<GamePageProps> = ({ players, onBackToLanding }) => {
     setTheme(type);
   };
 
-  // Calculate positions for players in a circle
+  // Calculate positions for players in a circle - MUCH LARGER RADIUS
   const getPlayerPosition = (index: number, totalPlayers: number) => {
     const angle = (index * 360) / totalPlayers - 90; // Start from top
-    const radius = 280; // Increased distance from center
+    const radius = 450; // SIGNIFICANTLY INCREASED from 350 to 450 to prevent overlap with bottle
     const x = Math.cos((angle * Math.PI) / 180) * radius;
     const y = Math.sin((angle * Math.PI) / 180) * radius;
     return { x, y };
@@ -117,33 +123,46 @@ const GamePage: React.FC<GamePageProps> = ({ players, onBackToLanding }) => {
             Truth & Dare
           </motion.h1>
 
-          {/* Players in Circle */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          {/* Players in Circle - with much larger spacing */}
+          <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
             {players.map((player, index) => {
               const position = getPlayerPosition(index, players.length);
               return (
                 <motion.div
                   key={player.id}
-                  className="absolute z-20"
+                  className="absolute z-100"
                   style={{
                     transform: `translate(${position.x}px, ${position.y}px)`,
+                    left: '50%',
+                    top: '50%',
+                    marginLeft: '250px', // Half of player card width for centering
+                    marginTop: '-40px',  // Half of player card height for centering
                   }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <div className={`backdrop-blur-sm bg-white bg-opacity-10 rounded-xl p-2 border border-white border-opacity-20 shadow-lg text-center min-w-[100px] max-w-[120px] ${
-                    currentPlayer?.id === player.id ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''
+                  <div className={`backdrop-blur-sm bg-white bg-opacity-10 rounded-xl p-3 border border-white border-opacity-20 shadow-lg text-center w-36 ${
+                    currentPlayer?.id === player.id ? 'ring-2 ring-yellow-400 ring-opacity-50 bg-opacity-20' : ''
                   }`}>
-                    <div className="text-white font-semibold text-xs">{player.name}</div>
+                    {/* Player Avatar */}
+                    <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                      {player.name.charAt(0).toUpperCase()}
+                    </div>
+                    {/* Player Name - Now clearly separated */}
+                    <div className="text-white font-semibold text-sm px-2 py-1 rounded bg-black bg-opacity-50">
+                      {player.name}
+                    </div>
                   </div>
                 </motion.div>
               );
             })}
           </div>
 
-          {/* Bottle in Center */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+          {/* Bottle in Center - with clear space around it */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
+            {/* Clear circular area around bottle */}
+            <div className="absolute inset-0 w-64 h-64 rounded-full bg-black bg-opacity-10 backdrop-blur-sm border border-white border-opacity-10 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"></div>
             <Bottle
               isSpinning={isSpinning}
               onSpinComplete={handleSpinComplete}
@@ -173,9 +192,9 @@ const GamePage: React.FC<GamePageProps> = ({ players, onBackToLanding }) => {
 
           {/* Current Task Display */}
           <AnimatePresence>
-            {currentPlayer && task && !showModal && (
+            {currentPlayer && task && modalType && !showModal && (
               <motion.div
-                className="absolute top-20 left-1/2 transform -translate-x-1/2 backdrop-blur-sm bg-white bg-opacity-10 rounded-2xl p-6 border border-white border-opacity-20 shadow-2xl text-center"
+                className="absolute top-20 left-1/2 transform -translate-x-1/2 backdrop-blur-sm bg-white bg-opacity-10 rounded-2xl p-6 border border-white border-opacity-20 shadow-2xl text-center max-w-md"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -50, opacity: 0 }}
@@ -225,4 +244,4 @@ const GamePage: React.FC<GamePageProps> = ({ players, onBackToLanding }) => {
   );
 };
 
-export default GamePage; 
+export default GamePage;

@@ -41,6 +41,6 @@ export interface TaskModalProps {
   modalType: 'truth' | 'dare' | null;
   task: string;
   onTaskChange: (task: string) => void;
-  onSubmit: () => void;
+  onSubmit: (type: 'truth' | 'dare', task: string) => void;
   onThemeChange: (type: 'truth' | 'dare') => void;
-} 
+}

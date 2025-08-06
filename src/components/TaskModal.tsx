@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TaskModalProps } from '../types';
+import { Player } from '../types';
+
+interface TaskModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedPlayer: Player | null;
+  modalType: 'truth' | 'dare' | null;
+  task: string;
+  onTaskChange: (task: string) => void;
+  onSubmit: (type: 'truth' | 'dare', task: string) => void;
+  onThemeChange: (type: 'truth' | 'dare') => void;
+}
 
 const TaskModal: React.FC<TaskModalProps> = ({
   isOpen,
@@ -12,12 +23,21 @@ const TaskModal: React.FC<TaskModalProps> = ({
   onSubmit,
   onThemeChange
 }) => {
-  const [localTask, setLocalTask] = useState(task);
-  const [localModalType, setLocalModalType] = useState<'truth' | 'dare' | null>(modalType);
+  const [localTask, setLocalTask] = useState('');
+  const [localModalType, setLocalModalType] = useState<'truth' | 'dare' | null>(null);
+
+  // Reset local state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setLocalTask('');
+      setLocalModalType(null);
+    }
+  }, [isOpen]);
 
   const handleSubmit = () => {
-    onTaskChange(localTask);
-    onSubmit();
+    if (localTask.trim() && localModalType) {
+      onSubmit(localModalType, localTask.trim());
+    }
   };
 
   const handleClose = () => {
@@ -29,6 +49,11 @@ const TaskModal: React.FC<TaskModalProps> = ({
   const handleTypeSelect = (type: 'truth' | 'dare') => {
     setLocalModalType(type);
     onThemeChange(type);
+  };
+
+  const handleTaskChange = (value: string) => {
+    setLocalTask(value);
+    onTaskChange(value);
   };
 
   return (
@@ -51,7 +76,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
           
           {/* Modal */}
           <motion.div
-            className="relative w-full max-w-md glass rounded-2xl p-6 shadow-2xl"
+            className="relative w-full max-w-md backdrop-blur-sm bg-white bg-opacity-10 rounded-2xl p-6 border border-white border-opacity-20 shadow-2xl"
             initial={{ scale: 0.8, opacity: 0, y: 50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -128,17 +153,20 @@ const TaskModal: React.FC<TaskModalProps> = ({
               transition={{ delay: 0.4 }}
             >
               <label className="block text-white font-medium mb-2">
-                {localModalType === 'truth' ? 'Ask a question:' : 'Give them a challenge:'}
+                {localModalType === 'truth' ? 'Ask a question:' : localModalType === 'dare' ? 'Give them a challenge:' : 'Select Truth or Dare first:'}
               </label>
               <textarea
                 value={localTask}
-                onChange={(e) => setLocalTask(e.target.value)}
+                onChange={(e) => handleTaskChange(e.target.value)}
                 placeholder={localModalType === 'truth' 
                   ? "What's your deepest secret?" 
-                  : "Do 10 push-ups!"
+                  : localModalType === 'dare'
+                  ? "Do 10 push-ups!"
+                  : "First choose Truth or Dare above..."
                 }
                 className="w-full p-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows={3}
+                disabled={!localModalType}
               />
             </motion.div>
             
@@ -166,4 +194,4 @@ const TaskModal: React.FC<TaskModalProps> = ({
   );
 };
 
-export default TaskModal; 
+export default TaskModal;
